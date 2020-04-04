@@ -11,11 +11,11 @@ export class FrozenItemDto {
 }
 export class FreezerSlotDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
-  id: string;
+  readonly id: string;
   @ApiProperty({ description: 'The name of the freezer slot', example: 'Bottom drawer' })
   name: string;
   @ApiProperty({ description: 'The items stored in this freezer slot', type: [FrozenItemDto] })
-  frozenItems: FrozenItemDto[];
+  readonly frozenItems: FrozenItemDto[];
 }
 export class FreezerDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
@@ -23,7 +23,7 @@ export class FreezerDto {
   @ApiProperty({ description: 'The name', example: 'The downstairs freezer' })
   name: string;
   @ApiProperty({ description: 'The freezer slots attributed to this freezer', type: [FreezerSlotDto] })
-  slots: FreezerSlotDto[];
+  readonly slots: FreezerSlotDto[];
 }
 export class CreateNewFreezerDto {
   @ApiProperty({ description: 'The name of the new freezer', example: 'Upstairs' })
