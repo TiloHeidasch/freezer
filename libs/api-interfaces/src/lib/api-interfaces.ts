@@ -5,25 +5,25 @@ export class FrozenItemDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
   @ApiProperty({ description: 'The name of the frozen item', example: 'This can be whatever you want' })
-  readonly name: string;
+  name: string;
   @ApiProperty({ description: 'The quantity of how many are in store', example: 'Curry' })
-  readonly quantity: number;
+  quantity: number;
 }
 export class FreezerSlotDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
-  readonly id: string;
+  id: string;
   @ApiProperty({ description: 'The name of the freezer slot', example: 'Bottom drawer' })
-  readonly name: string;
+  name: string;
   @ApiProperty({ description: 'The items stored in this freezer slot', type: [FrozenItemDto] })
-  readonly frozenItems: FrozenItemDto[];
+  frozenItems: FrozenItemDto[];
 }
 export class FreezerDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
   @ApiProperty({ description: 'The name', example: 'The downstairs freezer' })
-  readonly name: string;
+  name: string;
   @ApiProperty({ description: 'The freezer slots attributed to this freezer', type: [FreezerSlotDto] })
-  readonly slots: FreezerSlotDto[];
+  slots: FreezerSlotDto[];
 }
 export class CreateNewFreezerDto {
   @ApiProperty({ description: 'The name of the new freezer', example: 'Upstairs' })
