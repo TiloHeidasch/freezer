@@ -1,3 +1,92 @@
-export interface Message {
-  message: string;
+import { v4 as uuidv4 } from 'uuid';
+import { ApiProperty } from '@nestjs/swagger'
+
+export class Freezer {
+  id: string;
+  name: string;
+  slots: FreezerSlot[];
+  constructor(name: string) {
+    this.id = uuidv4();
+    this.name = name;
+    this.slots = [];
+  }
+  toFreezerDto(): FreezerDto {
+    const slots: FreezerSlotDto[] = [];
+    this.slots.forEach(slot => {
+      slots.push(slot.toFreezerSlotDto());
+    });
+    return { id: this.id, name: this.name, slots };
+  }
+}
+export class FreezerSlot {
+  id: string;
+  name: string;
+  frozenItems: FrozenItem[];
+  constructor(name: string) {
+    this.id = uuidv4();
+    this.name = name;
+    this.frozenItems = [];
+  }
+  toFreezerSlotDto(): FreezerSlotDto {
+    const frozenItems: FrozenItemDto[] = [];
+    this.frozenItems.forEach(frozenItem => {
+      frozenItems.push(frozenItem.toFrozenItemDto());
+    });
+    return { id: this.id, name: this.name, frozenItems };
+  }
+}
+export class FrozenItem {
+  id: string;
+  name: string;
+  quantity: number;
+  constructor(name: string, quantity?: number) {
+    this.id = uuidv4();
+    this.name = name;
+    if (quantity !== undefined) {
+      this.quantity = quantity;
+    } else {
+      this.quantity = 0;
+    }
+  }
+  toFrozenItemDto(): FrozenItemDto {
+    return { id: this.id, name: this.name, quantity: this.quantity };
+  }
+}
+export class FrozenItemDto {
+  @ApiProperty({ description: 'The unique id', example: uuidv4() })
+  readonly id: string;
+  @ApiProperty({ description: 'The name of the frozen item', example: 'This can be whatever you want' })
+  readonly name: string;
+  @ApiProperty({ description: 'The quantity of how many are in store', example: 'Curry' })
+  readonly quantity: number;
+}
+export class FreezerSlotDto {
+  @ApiProperty({ description: 'The unique id', example: uuidv4() })
+  readonly id: string;
+  @ApiProperty({ description: 'The name of the freezer slot', example: 'Bottom drawer' })
+  readonly name: string;
+  @ApiProperty({ description: 'The items stored in this freezer slot', type: [FrozenItemDto] })
+  readonly frozenItems: FrozenItemDto[];
+}
+export class FreezerDto {
+  @ApiProperty({ description: 'The unique id', example: uuidv4() })
+  readonly id: string;
+  @ApiProperty({ description: 'The name', example: 'The downstairs freezer' })
+  readonly name: string;
+  @ApiProperty({ description: 'The freezer slots attributed to this freezer', type: [FreezerSlotDto] })
+  readonly slots: FreezerSlotDto[];
+}
+export class CreateNewFreezerDto {
+  @ApiProperty({ description: 'The name of the new freezer', example: 'Upstairs' })
+  name: string;
+}
+export class CreateNewFreezerSlotDto {
+  @ApiProperty({ description: 'The name of the new Freezer slot', example: 'Bottom drawer' })
+  name: string;
+}
+export class CreateNewFrozenItemDto {
+  @ApiProperty({ description: 'The name of the new frozen item', example: 'My new frozen item' })
+  name: string;
+  @ApiProperty({ description: 'The amount of the newly created frozen items', example: '12', required: false })
+  quantity?: number;
 }
