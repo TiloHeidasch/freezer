@@ -4,9 +4,9 @@ import { ApiProperty } from '@nestjs/swagger'
 export class FrozenItemDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
-  @ApiProperty({ description: 'The name of the frozen item', example: 'This can be whatever you want' })
+  @ApiProperty({ description: 'The name of the frozen item', example: 'Curry' })
   name: string;
-  @ApiProperty({ description: 'The quantity of how many are in store', example: 'Curry' })
+  @ApiProperty({ description: 'The quantity of how many are in store', example: '3' })
   quantity: number;
 }
 export class FreezerSlotDto {
