@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put } from '@nestjs/common';
 import { CreateNewFreezerDto, FreezerDto, FreezerSlotDto, CreateNewFreezerSlotDto, FrozenItemDto, CreateNewFrozenItemDto } from '@freezer/api-interfaces';
 import { FreezerService } from './freezer.service';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiNotFoundResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiNotFoundResponse, ApiParam, ApiBody, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { v4 as uuidv4 } from 'uuid';
 import { Freezer, FreezerSlot, FrozenItem } from './types';
 
@@ -32,14 +32,23 @@ export class FreezerController {
 
     @Post()
     @ApiOperation({ summary: 'Create new Freezer', description: 'Create a new Freezer by name' })
-    @ApiOkResponse({ description: 'The newly created Freezer', type: FreezerDto })
+    @ApiCreatedResponse({ description: 'The newly created Freezer', type: FreezerDto })
     @ApiBody({ description: 'The params to create the new freezer', type: CreateNewFreezerDto })
     async createNewFreezer(@Body() createFreezerDto: CreateNewFreezerDto): Promise<FreezerDto> {
         return this.freezerToDto(await this.service.addNewFreezer(createFreezerDto.name));
     }
+    @Put()
+    @ApiOperation({ summary: 'Update or create Freezer', description: 'Update or Create a Freezer' })
+    @ApiCreatedResponse({ description: 'The newly created Freezer', type: FreezerDto })
+    @ApiOkResponse({ description: 'The freezer has been modified', type: FreezerDto })
+    @ApiBody({ description: 'The freezer to be updated', type: FreezerDto })
+    async updateOrCreateFreezer(@Body() freezerDto: FreezerDto): Promise<FreezerDto> {
+        const freezer: Freezer = { id: freezerDto.id, name: freezerDto.name, slots: freezerDto.slots };
+        return this.freezerToDto(await this.service.updateOrCreateFreezer(freezer));
+    }
     @Delete(':freezerId')
     @ApiOperation({ summary: 'Delete Freezer by ID', description: 'Delete the specified freezer including its contents' })
-    @ApiOkResponse({ description: 'Freezer deleted' })
+    @ApiNoContentResponse({ description: 'Freezer deleted' })
     @ApiNotFoundResponse({ description: 'No freezer found for specified id' })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer', example: uuidv4() })
     async deleteFreezerById(@Param('freezerId') freezerId: string) {
@@ -70,16 +79,26 @@ export class FreezerController {
     }
     @Post(':freezerId/freezerslot')
     @ApiOperation({ summary: 'Create new Freezer Slot', description: 'Create a new Freezer slot for freezer by name' })
-    @ApiOkResponse({ description: 'The newly created FreezerSlot', type: FreezerSlotDto })
+    @ApiCreatedResponse({ description: 'The newly created FreezerSlot', type: FreezerSlotDto })
     @ApiNotFoundResponse({ description: 'No freezer found for specified id' })
     @ApiBody({ description: 'The params to create the new freezerSlot', type: CreateNewFreezerSlotDto })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to create the new slot', example: uuidv4() })
     async createNewFreezerSlot(@Body() createNewFreezerSlotDto: CreateNewFreezerSlotDto, @Param('freezerId') freezerId: string): Promise<FreezerSlotDto> {
         return this.freezerSlotToDto(await this.service.addNewFreezerSlot(freezerId, createNewFreezerSlotDto.name));
     }
+    @Put(':freezerId/freezerslot')
+    @ApiOperation({ summary: 'Update or create Freezer Slot', description: 'Update or Create a Freezer Slot' })
+    @ApiCreatedResponse({ description: 'The newly created freezerSlot', type: FreezerSlotDto })
+    @ApiOkResponse({ description: 'The freezerSlot has been modified', type: FreezerSlotDto })
+    @ApiBody({ description: 'The freezerSlot to be updated', type: FreezerSlotDto })
+    @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to update or create the slot', example: uuidv4() })
+    async updateOrCreateFreezerSlot(@Body() freezerSlotDto: FreezerSlotDto, @Param('freezerId') freezerId: string): Promise<FreezerSlotDto> {
+        const freezerSlot: FreezerSlot = { id: freezerSlotDto.id, name: freezerSlotDto.name, frozenItems: freezerSlotDto.frozenItems };
+        return this.freezerSlotToDto(await this.service.updateOrCreateFreezerSlot(freezerId, freezerSlot));
+    }
     @Delete(':freezerId/freezerslot/:freezerSlotId')
     @ApiOperation({ summary: 'Delete FreezerSlot by ID', description: 'Delete the specified freezer slot including its contents' })
-    @ApiOkResponse({ description: 'FreezerSlot deleted' })
+    @ApiNoContentResponse({ description: 'FreezerSlot deleted' })
     @ApiNotFoundResponse({ description: 'No freezer/freezerSlot found for specified id' })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer', example: uuidv4() })
     @ApiParam({ name: 'freezerSlotId', description: 'The id of the freezerSlot', example: uuidv4() })
@@ -113,7 +132,7 @@ export class FreezerController {
     }
     @Post(':freezerId/freezerslot/:freezerSlotId/frozenItem')
     @ApiOperation({ summary: 'Create new Frozen Item', description: 'Create a new Frozen Item for freezer and freezer slot by name and quantity' })
-    @ApiOkResponse({ description: 'The newly created FrozenItem', type: FrozenItemDto })
+    @ApiCreatedResponse({ description: 'The newly created FrozenItem', type: FrozenItemDto })
     @ApiNotFoundResponse({ description: 'No freezer/freezerSlot found for specified id' })
     @ApiBody({ description: 'The params to create the new frozenItem', type: CreateNewFrozenItemDto })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to create the new item', example: uuidv4() })
@@ -121,9 +140,20 @@ export class FreezerController {
     async createNewFrozenItem(@Body() createNewFrozenItemDto: CreateNewFrozenItemDto, @Param('freezerId') freezerId: string, @Param('freezerSlotId') freezerSlotId: string): Promise<FrozenItemDto> {
         return this.frozenItemToDto(await this.service.addNewFrozenItem(freezerId, freezerSlotId, createNewFrozenItemDto.name, createNewFrozenItemDto.quantity));
     }
+    @Put(':freezerId/freezerslot/:freezerSlotId/frozenItem')
+    @ApiOperation({ summary: 'Update or create Frozen Item', description: 'Update or Create a Frozen Item' })
+    @ApiCreatedResponse({ description: 'The newly created frozenItem', type: FrozenItem })
+    @ApiOkResponse({ description: 'The frozenItem has been modified', type: FrozenItem })
+    @ApiBody({ description: 'The frozenItem to be updated', type: FrozenItemDto })
+    @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to update or create the item', example: uuidv4() })
+    @ApiParam({ name: 'freezerSlotId', description: 'The id of the freezerSlot in which to update or create the item', example: uuidv4() })
+    async updateOrCreateFrozenItem(@Body() frozenItemDto: FrozenItemDto, @Param('freezerId') freezerId: string, @Param('freezerSlotId') freezerSlotId: string): Promise<FrozenItemDto> {
+        const frozenItem: FrozenItem = { id: frozenItemDto.id, name: frozenItemDto.name, quantity: frozenItemDto.quantity };
+        return this.frozenItemToDto(await this.service.updateOrCreateFrozenItem(freezerId, freezerSlotId, frozenItem));
+    }
     @Delete(':freezerId/freezerslot/:freezerSlotId/frozenItem/:frozenItemId')
     @ApiOperation({ summary: 'Delete FrozenItem by ID', description: 'Delete the specified frozen item' })
-    @ApiOkResponse({ description: 'FrozenItem deleted' })
+    @ApiNoContentResponse({ description: 'FrozenItem deleted' })
     @ApiNotFoundResponse({ description: 'No freezer/freezerSlot/frozenItem found for specified id' })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer', example: uuidv4() })
     @ApiParam({ name: 'freezerSlotId', description: 'The id of the freezerSlot', example: uuidv4() })

@@ -16,6 +16,7 @@ export class FreezerService {
         const freezerFile = await this.loadFreezerFile();
         const freezer: Freezer = freezerFile.freezers.find(freezer => freezer.id === freezerId);
         if (freezer === undefined) {
+            console.log(freezerFile);
             throw new NotFoundException('Freezer with id ' + freezerId + ' not found');
         }
         return freezer;
@@ -31,14 +32,32 @@ export class FreezerService {
         const freezerFile = await this.loadFreezerFile();
         freezerFile.freezers = freezerFile.freezers.filter(freezerInFile => freezerInFile.id !== freezer.id);
         freezerFile.freezers.push(freezer);
-        promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
+        await promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
     }
     async deleteFreezerById(freezerId: string) {
         //call to see if the freezer actually exists
         await this.getFreezerById(freezerId);
         const freezerFile = await this.loadFreezerFile();
         freezerFile.freezers = freezerFile.freezers.filter(freezerInFile => freezerInFile.id !== freezerId);
-        promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
+        await promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
+    }
+    async updateOrCreateFreezer(newFreezer: Freezer): Promise<Freezer> {
+        try {
+            //check if it exists
+            await this.getFreezerById(newFreezer.id);
+            await this.updateFreezer(newFreezer);
+            return newFreezer;
+        } catch (error) {
+            //if it doesn't exist we have to create a new one
+            const freezer: Freezer = await this.addNewFreezer(newFreezer.name);
+            //and add the requested contents to it
+            for (let index = 0; index < newFreezer.slots.length; index++) {
+                const newSlot = newFreezer.slots[index];
+                freezer.slots.push(await this.updateOrCreateFreezerSlot(freezer.id, newSlot));
+            }
+            await this.updateFreezer(freezer);
+            return await this.getFreezerById(freezer.id);
+        }
     }
     async getAllFreezerSlots(freezerId: string): Promise<FreezerSlot[]> {
         const freezer: Freezer = await this.getFreezerById(freezerId);
@@ -56,21 +75,39 @@ export class FreezerService {
         const freezerSlot: FreezerSlot = new FreezerSlot(name);
         const freezer: Freezer = await this.getFreezerById(freezerId);
         freezer.slots.push(freezerSlot);
-        this.updateFreezer(freezer);
+        await this.updateFreezer(freezer);
         return freezerSlot;
     }
     async updateFreezerSlot(freezerId: string, freezerSlot: FreezerSlot) {
         const freezer: Freezer = await this.getFreezerById(freezerId);
         freezer.slots = freezer.slots.filter(slot => slot.id !== freezerSlot.id);
         freezer.slots.push(freezerSlot);
-        this.updateFreezer(freezer);
+        await this.updateFreezer(freezer);
     }
     async deleteFreezerSlotById(freezerId: string, freezerSlotId: string) {
         //call to see if slot actually exists
         await this.getFreezerSlotById(freezerId, freezerSlotId);
         const freezer: Freezer = await this.getFreezerById(freezerId);
         freezer.slots = freezer.slots.filter(slot => slot.id !== freezerSlotId);
-        this.updateFreezer(freezer);
+        await this.updateFreezer(freezer);
+    }
+    async updateOrCreateFreezerSlot(freezerId: string, newFreezerSlot: FreezerSlot): Promise<FreezerSlot> {
+        try {
+            //check if it exists
+            await this.getFreezerSlotById(freezerId, newFreezerSlot.id);
+            await this.updateFreezerSlot(freezerId, newFreezerSlot);
+            return newFreezerSlot;
+        } catch (error) {
+            //if it doesn't exist we have to create a new one
+            const freezerSlot: FreezerSlot = await this.addNewFreezerSlot(freezerId, newFreezerSlot.name);
+            //and add the requested contents to it
+            for (let index = 0; index < newFreezerSlot.frozenItems.length; index++) {
+                const newItem = newFreezerSlot.frozenItems[index];
+                freezerSlot.frozenItems.push(await this.updateOrCreateFrozenItem(freezerId, freezerSlot.id, newItem));
+            }
+            await this.updateFreezerSlot(freezerId, freezerSlot);
+            return await this.getFreezerSlotById(freezerId, freezerSlot.id);
+        }
     }
 
     async getAllFrozenItems(freezerId: string, freezerSlotId: string): Promise<FrozenItem[]> {
@@ -89,15 +126,33 @@ export class FreezerService {
         const frozenItem: FrozenItem = new FrozenItem(name, quantity);
         const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
         freezerSlot.frozenItems.push(frozenItem);
-        this.updateFreezerSlot(freezerId, freezerSlot);
+        await this.updateFreezerSlot(freezerId, freezerSlot);
         return frozenItem;
+    }
+    async updateFrozenItem(freezerId: string, freezerSlotId: string, frozenItem: FrozenItem) {
+        const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
+        freezerSlot.frozenItems = freezerSlot.frozenItems.filter(item => item.id !== frozenItem.id);
+        freezerSlot.frozenItems.push(frozenItem);
+        await this.updateFreezerSlot(freezerId, freezerSlot);
     }
     async deleteFrozenItemById(freezerId: string, freezerSlotId: string, frozenItemId: string) {
         //call to see if item actually exists
         await this.getFrozenItemById(freezerId, freezerSlotId, frozenItemId);
         const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
         freezerSlot.frozenItems = freezerSlot.frozenItems.filter(item => item.id !== frozenItemId);
-        this.updateFreezerSlot(freezerId, freezerSlot);
+        await this.updateFreezerSlot(freezerId, freezerSlot);
+    }
+    async updateOrCreateFrozenItem(freezerId: string, freezerSlotId: string, newFrozenItem: FrozenItem): Promise<FrozenItem> {
+        try {
+            //check if it exists
+            await this.getFrozenItemById(freezerId, freezerSlotId, newFrozenItem.id);
+            await this.updateFrozenItem(freezerId, freezerSlotId, newFrozenItem);
+            return newFrozenItem;
+        } catch (error) {
+            //if it doesn't exist we have to create a new one
+            const frozenItem: FrozenItem = await this.addNewFrozenItem(freezerId, freezerSlotId, newFrozenItem.name, newFrozenItem.quantity);
+            return frozenItem;
+        }
     }
 
 
