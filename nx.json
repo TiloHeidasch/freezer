@@ -14,10 +14,6 @@
     "freezer": {
       "tags": []
     },
-    "freezer-e2e": {
-      "tags": [],
-      "implicitDependencies": ["freezer"]
-    },
     "api": {
       "tags": []
     },
