@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateFreezerDialogComponent } from './create-freezer-dialog/create-freezer-dialog.component';
 import { CreateFreezerSlotDialogComponent } from './create-freezer-slot-dialog/create-freezer-slot-dialog.component';
 import { CreateFrozenItemDialogComponent } from './create-frozen-item-dialog/create-frozen-item-dialog.component';
-import { Sort } from '@angular/material/Sort';
 import { EditNameDialogComponent } from './edit-name-dialog/edit-name-dialog.component';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
 
