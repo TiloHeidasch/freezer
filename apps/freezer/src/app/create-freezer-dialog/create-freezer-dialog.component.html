@@ -1,0 +1,12 @@
+<h1>Create new Freezer</h1>
+<div mat-dialog-content>
+    <p>How should the new freezer be called?</p>
+    <mat-form-field>
+        <mat-label>Freezer Name</mat-label>
+        <input matInput [(ngModel)]="name">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button [mat-dialog-close]="name">Create</button>
+</div>

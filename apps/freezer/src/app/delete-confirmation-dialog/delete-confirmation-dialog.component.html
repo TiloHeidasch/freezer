@@ -1,0 +1,8 @@
+<h1>Delete</h1>
+<div mat-dialog-content>
+    <p>Do you want to delete {{item.name}}</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button style="color: #F00;" [mat-dialog-close]="true">Delete</button>
+</div>

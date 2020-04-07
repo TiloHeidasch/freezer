@@ -4,26 +4,31 @@ export class Freezer {
     id: string;
     name: string;
     slots: FreezerSlot[];
+    created: Date;
     constructor(name: string) {
         this.id = uuidv4();
         this.name = name;
         this.slots = [];
+        this.created = new Date();
     }
 }
 export class FreezerSlot {
     id: string;
     name: string;
     frozenItems: FrozenItem[];
+    created: Date;
     constructor(name: string) {
         this.id = uuidv4();
         this.name = name;
         this.frozenItems = [];
+        this.created = new Date();
     }
 }
 export class FrozenItem {
     id: string;
     name: string;
     quantity: number;
+    created: Date;
     constructor(name: string, quantity?: number) {
         this.id = uuidv4();
         this.name = name;
@@ -32,5 +37,6 @@ export class FrozenItem {
         } else {
             this.quantity = 0;
         }
+        this.created = new Date();
     }
 }

@@ -1,0 +1,15 @@
+<h1>Change Name</h1>
+<div mat-dialog-content>
+    <p>How should the new name be?</p>
+    <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="newName" [formControl]="nameFormControl" [errorStateMatcher]="nameMatcher">
+        <mat-error *ngIf="nameFormControl.hasError('required')">
+            Name is <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button [disabled]="nameFormControl.hasError('required')" [mat-dialog-close]="newName">Change</button>
+</div>

@@ -43,7 +43,7 @@ export class FreezerController {
     @ApiOkResponse({ description: 'The freezer has been modified', type: FreezerDto })
     @ApiBody({ description: 'The freezer to be updated', type: FreezerDto })
     async updateOrCreateFreezer(@Body() freezerDto: FreezerDto): Promise<FreezerDto> {
-        const freezer: Freezer = { id: freezerDto.id, name: freezerDto.name, slots: freezerDto.slots };
+        const freezer: Freezer = this.dtoToFreezer(freezerDto);
         return this.freezerToDto(await this.service.updateOrCreateFreezer(freezer));
     }
     @Delete(':freezerId')
@@ -93,7 +93,7 @@ export class FreezerController {
     @ApiBody({ description: 'The freezerSlot to be updated', type: FreezerSlotDto })
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to update or create the slot', example: uuidv4() })
     async updateOrCreateFreezerSlot(@Body() freezerSlotDto: FreezerSlotDto, @Param('freezerId') freezerId: string): Promise<FreezerSlotDto> {
-        const freezerSlot: FreezerSlot = { id: freezerSlotDto.id, name: freezerSlotDto.name, frozenItems: freezerSlotDto.frozenItems };
+        const freezerSlot: FreezerSlot = this.dtoToFreezerSlot(freezerSlotDto);
         return this.freezerSlotToDto(await this.service.updateOrCreateFreezerSlot(freezerId, freezerSlot));
     }
     @Delete(':freezerId/freezerslot/:freezerSlotId')
@@ -148,7 +148,7 @@ export class FreezerController {
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to update or create the item', example: uuidv4() })
     @ApiParam({ name: 'freezerSlotId', description: 'The id of the freezerSlot in which to update or create the item', example: uuidv4() })
     async updateOrCreateFrozenItem(@Body() frozenItemDto: FrozenItemDto, @Param('freezerId') freezerId: string, @Param('freezerSlotId') freezerSlotId: string): Promise<FrozenItemDto> {
-        const frozenItem: FrozenItem = { id: frozenItemDto.id, name: frozenItemDto.name, quantity: frozenItemDto.quantity };
+        const frozenItem: FrozenItem = this.dtoToFrozenItem(frozenItemDto);
         return this.frozenItemToDto(await this.service.updateOrCreateFrozenItem(freezerId, freezerSlotId, frozenItem));
     }
     @Delete(':freezerId/freezerslot/:freezerSlotId/frozenItem/:frozenItemId')
@@ -167,17 +167,36 @@ export class FreezerController {
         freezer.slots.forEach(slot => {
             slots.push(this.freezerSlotToDto(slot));
         });
-        return { id: freezer.id, name: freezer.name, slots };
+        return { id: freezer.id, name: freezer.name, slots, created: freezer.created };
     }
     private freezerSlotToDto(freezerSlot: FreezerSlot): FreezerSlotDto {
         const frozenItems: FrozenItemDto[] = [];
         freezerSlot.frozenItems.forEach(frozenItem => {
             frozenItems.push(this.frozenItemToDto(frozenItem));
         });
-        return { id: freezerSlot.id, name: freezerSlot.name, frozenItems };
+        return { id: freezerSlot.id, name: freezerSlot.name, frozenItems, created: freezerSlot.created };
     }
     private frozenItemToDto(frozenItem: FrozenItem): FrozenItemDto {
-        return { id: frozenItem.id, name: frozenItem.name, quantity: frozenItem.quantity };
+        return { id: frozenItem.id, name: frozenItem.name, quantity: frozenItem.quantity, created: frozenItem.created };
+
+    }
+
+    private dtoToFreezer(freezerDto: FreezerDto): Freezer {
+        const slots: FreezerSlot[] = [];
+        freezerDto.slots.forEach(slot => {
+            slots.push(this.dtoToFreezerSlot(slot));
+        });
+        return { id: freezerDto.id, name: freezerDto.name, slots, created: freezerDto.created };
+    }
+    private dtoToFreezerSlot(freezerSlotDto: FreezerSlotDto): FreezerSlot {
+        const frozenItems: FrozenItem[] = [];
+        freezerSlotDto.frozenItems.forEach(frozenItem => {
+            frozenItems.push(this.dtoToFrozenItem(frozenItem));
+        });
+        return { id: freezerSlotDto.id, name: freezerSlotDto.name, frozenItems, created: freezerSlotDto.created };
+    }
+    private dtoToFrozenItem(frozenItemDto: FrozenItemDto): FrozenItem {
+        return { id: frozenItemDto.id, name: frozenItemDto.name, quantity: frozenItemDto.quantity, created: frozenItemDto.created };
 
     }
 }

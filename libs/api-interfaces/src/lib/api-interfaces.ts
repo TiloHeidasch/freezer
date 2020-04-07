@@ -4,6 +4,8 @@ import { ApiProperty } from '@nestjs/swagger'
 export class FrozenItemDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
+  @ApiProperty({ description: 'The date the entry was created', example: new Date() })
+  readonly created: Date;
   @ApiProperty({ description: 'The name of the frozen item', example: 'Curry' })
   name: string;
   @ApiProperty({ description: 'The quantity of how many are in store', example: '3' })
@@ -12,18 +14,22 @@ export class FrozenItemDto {
 export class FreezerSlotDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
+  @ApiProperty({ description: 'The date the entry was created', example: new Date() })
+  readonly created: Date;
   @ApiProperty({ description: 'The name of the freezer slot', example: 'Bottom drawer' })
   name: string;
   @ApiProperty({ description: 'The items stored in this freezer slot', type: [FrozenItemDto] })
-  readonly frozenItems: FrozenItemDto[];
+  frozenItems: FrozenItemDto[];
 }
 export class FreezerDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
   readonly id: string;
+  @ApiProperty({ description: 'The date the entry was created', example: new Date() })
+  readonly created: Date;
   @ApiProperty({ description: 'The name', example: 'The downstairs freezer' })
   name: string;
   @ApiProperty({ description: 'The freezer slots attributed to this freezer', type: [FreezerSlotDto] })
-  readonly slots: FreezerSlotDto[];
+  slots: FreezerSlotDto[];
 }
 export class CreateNewFreezerDto {
   @ApiProperty({ description: 'The name of the new freezer', example: 'Upstairs' })

@@ -10,7 +10,7 @@ export class FreezerService {
 
     async getAllFreezers(): Promise<Freezer[]> {
         const freezerFile = await this.loadFreezerFile();
-        return freezerFile.freezers;
+        return this.sortFreezers(freezerFile.freezers);
     }
     async getFreezerById(freezerId: string): Promise<Freezer> {
         const freezerFile = await this.loadFreezerFile();
@@ -25,6 +25,7 @@ export class FreezerService {
         const freezer: Freezer = new Freezer(name);
         const freezerFile = await this.loadFreezerFile();
         freezerFile.freezers.push(freezer);
+        freezerFile.freezers = this.sortFreezers(freezerFile.freezers);
         await promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
         return freezer;
     }
@@ -32,6 +33,7 @@ export class FreezerService {
         const freezerFile = await this.loadFreezerFile();
         freezerFile.freezers = freezerFile.freezers.filter(freezerInFile => freezerInFile.id !== freezer.id);
         freezerFile.freezers.push(freezer);
+        freezerFile.freezers = this.sortFreezers(freezerFile.freezers);
         await promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
     }
     async deleteFreezerById(freezerId: string) {
@@ -39,6 +41,7 @@ export class FreezerService {
         await this.getFreezerById(freezerId);
         const freezerFile = await this.loadFreezerFile();
         freezerFile.freezers = freezerFile.freezers.filter(freezerInFile => freezerInFile.id !== freezerId);
+        freezerFile.freezers = this.sortFreezers(freezerFile.freezers);
         await promisify(writeFile)(this.freezerFilePath, JSON.stringify(freezerFile, undefined, 2));
     }
     async updateOrCreateFreezer(newFreezer: Freezer): Promise<Freezer> {
@@ -61,7 +64,7 @@ export class FreezerService {
     }
     async getAllFreezerSlots(freezerId: string): Promise<FreezerSlot[]> {
         const freezer: Freezer = await this.getFreezerById(freezerId);
-        return freezer.slots;
+        return this.sortFreezerSlots(freezer.slots);
     }
     async getFreezerSlotById(freezerId: string, slotId: string): Promise<FreezerSlot> {
         const freezer: Freezer = await this.getFreezerById(freezerId);
@@ -112,7 +115,7 @@ export class FreezerService {
 
     async getAllFrozenItems(freezerId: string, freezerSlotId: string): Promise<FrozenItem[]> {
         const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
-        return freezerSlot.frozenItems;
+        return this.sortFrozenItems(freezerSlot.frozenItems);
     }
     async getFrozenItemById(freezerId: string, freezerSlotId: string, frozenItemId: string): Promise<FrozenItem> {
         const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
@@ -178,5 +181,22 @@ export class FreezerService {
      */
     async resultFileExists() {
         return await promisify(exists)(this.freezerFilePath);
+    }
+    private sortFreezers(freezers: Freezer[]): Freezer[] {
+        freezers = freezers.sort((f1, f2) => f1.created.valueOf() - f2.created.valueOf());
+        freezers.forEach(freezer => {
+            freezer.slots = this.sortFreezerSlots(freezer.slots);
+        });
+        return freezers;
+    }
+    private sortFreezerSlots(slots: FreezerSlot[]): FreezerSlot[] {
+        slots.sort((s1, s2) => s1.created.valueOf() - s2.created.valueOf());
+        slots.forEach(slot => {
+            slot.frozenItems = this.sortFrozenItems(slot.frozenItems);
+        });
+        return slots;
+    }
+    private sortFrozenItems(items: FrozenItem[]): FrozenItem[] {
+        return items.sort((i1, i2) => i1.created.valueOf() - i2.created.valueOf());
     }
 }
