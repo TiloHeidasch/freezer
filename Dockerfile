@@ -21,7 +21,7 @@ RUN npm run nx -- build api && \
 # | Production target      |
 # --------------------------
 FROM node:12.16.1-alpine
-EXPOSE 3333
+EXPOSE 80
 
 WORKDIR /home/freezer
 
