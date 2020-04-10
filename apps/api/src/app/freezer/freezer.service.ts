@@ -5,7 +5,7 @@ import { Freezer, FreezerSlot, FrozenItem } from './types';
 
 @Injectable()
 export class FreezerService {
-    private readonly freezerFilePath = 'freezer.json';
+    private readonly freezerFilePath = 'data/freezer.json';
     private readonly logger = new Logger(FreezerService.name);
 
     async getAllFreezers(): Promise<Freezer[]> {
