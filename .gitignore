@@ -39,4 +39,4 @@ testem.log
 Thumbs.db
 
 # local data
-freezer.json
+/data
