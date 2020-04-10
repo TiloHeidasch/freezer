@@ -25,7 +25,6 @@ export class AppComponent {
   }
   setActiveFreezer(freezer: FreezerDto) {
     this.activeFreezer = freezer;
-    console.log(this.activeFreezer);
   }
   createNewFreezer() {
     const dialogRef = this.dialog.open(CreateFreezerDialogComponent);
