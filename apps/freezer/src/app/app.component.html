@@ -32,7 +32,7 @@
         <mat-card-subtitle class="freezer-slot-number">{{i+1}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content *ngIf="freezerSlot.frozenItems.length>0" class="freezer-slot-frozen-items">
-        <table mat-table [dataSource]="freezerSlot.frozenItems" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSources[i]" class="mat-elevation-z8">
 
           <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
