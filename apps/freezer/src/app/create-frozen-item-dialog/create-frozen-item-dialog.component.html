@@ -1,7 +1,7 @@
-<h1>Create new Frozen Item</h1>
+<div class="dialog-heading">Create Frozen Item</div>
 <div mat-dialog-content>
     <p>How should the new frozen item be called?</p>
-    <mat-form-field>
+    <mat-form-field class="dialog-form-field">
         <mat-label>Name</mat-label>
         <input matInput [(ngModel)]="data.name" [formControl]="nameFormControl" [errorStateMatcher]="nameMatcher">
         <mat-error *ngIf="nameFormControl.hasError('required')">
@@ -9,7 +9,7 @@
         </mat-error>
     </mat-form-field>
     <p>How many are stored?</p>
-    <mat-form-field>
+    <mat-form-field class="dialog-form-field">
         <mat-label>Quantity</mat-label>
         <input type="number" matInput [(ngModel)]="data.quantity" [formControl]="quantityFormControl"
             [errorStateMatcher]="quantityMatcher">
@@ -18,7 +18,7 @@
         </mat-error>
     </mat-form-field>
     <p>In which slot is the frozen item stored?</p>
-    <mat-form-field>
+    <mat-form-field class="dialog-form-field">
         <mat-label>Slot</mat-label>
         <mat-error *ngIf="slotFormControl.hasError('required')">
             Slot is <strong>required</strong>

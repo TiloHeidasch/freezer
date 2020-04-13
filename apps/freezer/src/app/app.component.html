@@ -1,4 +1,4 @@
-<mat-toolbar class="toolbar">
+<mat-toolbar color="primary" class="toolbar">
   <button mat-icon-button (click)="drawer.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
@@ -11,7 +11,7 @@
   </button>
 </mat-toolbar>
 <mat-drawer-container class="drawer-container">
-  <mat-drawer #drawer class="sidenav" mode="side">
+  <mat-drawer #drawer class="sidenav" mode="over">
     <mat-nav-list class="sidebar-navigation-list">
       <mat-list-item [ngClass]="{'active-nav-item': freezer===activeFreezer}" (click)="setActiveFreezer(freezer)"
         *ngFor="let freezer of freezers">{{freezer.name}}
