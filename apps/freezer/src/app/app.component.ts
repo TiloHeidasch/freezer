@@ -95,26 +95,26 @@ export class AppComponent {
       }
     });
   }
-  reduceQuantity(freezerSlotDto: FreezerSlotDto, frozenItem: FrozenItemDto) {
-    if (frozenItem.quantity > 1) {
-      frozenItem.quantity = frozenItem.quantity - 1;
-      this.freezerService.updateFrozenItem(this.activeFreezer, freezerSlotDto, frozenItem);
+  reduceQuantity(freezerSlotDto: FreezerSlotDto, frozenItemDto: FrozenItemDto) {
+    if (frozenItemDto.quantity > 1) {
+      frozenItemDto.quantity = frozenItemDto.quantity - 1;
+      this.freezerService.updateFrozenItem(this.activeFreezer, freezerSlotDto, frozenItemDto);
     } else {
-      this.deleteItem(freezerSlotDto, frozenItem);
+      this.deleteItem(freezerSlotDto, frozenItemDto);
     }
     this.updateDataSources();
   }
-  increaseQuantity(freezerSlotDto: FreezerSlotDto, frozenItem: FrozenItemDto) {
-    frozenItem.quantity = frozenItem.quantity + 1;
-    this.freezerService.updateFrozenItem(this.activeFreezer, freezerSlotDto, frozenItem);
+  increaseQuantity(freezerSlotDto: FreezerSlotDto, frozenItemDto: FrozenItemDto) {
+    frozenItemDto.quantity = frozenItemDto.quantity + 1;
+    this.freezerService.updateFrozenItem(this.activeFreezer, freezerSlotDto, frozenItemDto);
     this.updateDataSources();
   }
-  deleteItem(freezerSlotDto: FreezerSlotDto, frozenItem: FrozenItemDto) {
-    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, { data: frozenItem });
+  deleteItem(freezerSlotDto: FreezerSlotDto, frozenItemDto: FrozenItemDto) {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, { data: frozenItemDto });
     dialogRef.afterClosed().subscribe(async confirmed => {
       if (confirmed) {
-        freezerSlotDto.frozenItems = freezerSlotDto.frozenItems.filter(item => item.id !== frozenItem.id);
-        this.freezerService.deleteFrozenItem(this.activeFreezer, freezerSlotDto, frozenItem);
+        freezerSlotDto.frozenItems = freezerSlotDto.frozenItems.filter(item => item.id !== frozenItemDto.id);
+        this.freezerService.deleteFrozenItem(this.activeFreezer, freezerSlotDto, frozenItemDto);
         this.updateDataSources();
       }
     });
