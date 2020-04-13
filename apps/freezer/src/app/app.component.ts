@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FreezerDto, FreezerSlotDto, FrozenItemDto } from '@freezer/api-interfaces';
 import { FreezerService } from './freezer.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +8,7 @@ import { CreateFrozenItemDialogComponent } from './create-frozen-item-dialog/cre
 import { EditNameDialogComponent } from './edit-name-dialog/edit-name-dialog.component';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, Sort } from '@angular/material/sort';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'freezer-root',
