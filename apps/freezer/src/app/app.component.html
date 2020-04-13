@@ -3,12 +3,19 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>{{activeFreezer===undefined?'Freezer':activeFreezer.name}}</span>
-  <button mat-icon-button (click)="editFreezerName()">
-    <mat-icon>edit</mat-icon>
+  <button class="menu-button" *ngIf="activeFreezer!==undefined" mat-icon-button [matMenuTriggerFor]="freezermenu">
+    <mat-icon>more_vert</mat-icon>
   </button>
-  <button mat-icon-button class="delete" (click)="deleteFreezer()">
-    <mat-icon>delete_forever </mat-icon>
-  </button>
+  <mat-menu #freezermenu="matMenu">
+    <button mat-menu-item (click)="editFreezerName()">
+      <mat-icon>edit</mat-icon>
+      <span>Rename Freezer</span>
+    </button>
+    <button mat-menu-item class="delete" (click)="deleteFreezer()">
+      <mat-icon class="delete">delete_forever</mat-icon>
+      <span>Delete Freezer</span>
+    </button>
+  </mat-menu>
 </mat-toolbar>
 <mat-drawer-container class="drawer-container">
   <mat-drawer #drawer class="sidenav" mode="over">
@@ -23,12 +30,20 @@
     <mat-card class="freezer-slot-card" *ngFor="let freezerSlot of activeFreezer.slots ;let i=index">
       <mat-card-header>
         <mat-card-title class="freezer-slot-title">{{freezerSlot.name}}
-          <button mat-icon-button (click)="editFreezerSlotName(freezerSlot)">
-            <mat-icon>edit</mat-icon>
+          <button class="menu-button" *ngIf="activeFreezer!==undefined" mat-icon-button [matMenuTriggerFor]="slotmenu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button class="delete" (click)="deleteSlot(freezerSlot)">
-            <mat-icon>delete_forever </mat-icon>
-          </button></mat-card-title>
+          <mat-menu #slotmenu="matMenu">
+            <button mat-menu-item (click)="editFreezerSlotName(freezerSlot)">
+              <mat-icon>edit</mat-icon>
+              <span>Rename Freezer Slot</span>
+            </button>
+            <button mat-menu-item class="delete" (click)="deleteSlot(freezerSlot)">
+              <mat-icon class="delete">delete_forever</mat-icon>
+              <span>Delete Freezer Slot</span>
+            </button>
+          </mat-menu>
+        </mat-card-title>
         <mat-card-subtitle class="freezer-slot-number">{{i+1}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content *ngIf="freezerSlot.frozenItems.length>0" class="freezer-slot-frozen-items">

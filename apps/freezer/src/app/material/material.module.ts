@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule, } from '@angular/material/sidenav';
 import { MatTableModule, } from '@angular/material/table';
 import { MatToolbarModule, } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { A11yModule } from '@angular/cdk/a11y';
@@ -51,6 +52,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatSidenavModule,
     MatTableModule,
     MatToolbarModule,
+    MatMenuModule,
     FormsModule,
     ReactiveFormsModule,
   ]
