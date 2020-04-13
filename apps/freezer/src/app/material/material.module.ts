@@ -8,6 +8,7 @@ import { MatInputModule, } from '@angular/material/input';
 import { MatListModule, } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule, } from '@angular/material/sidenav';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule, } from '@angular/material/table';
 import { MatToolbarModule, } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -50,6 +51,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatListModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSortModule,
     MatTableModule,
     MatToolbarModule,
     MatMenuModule,

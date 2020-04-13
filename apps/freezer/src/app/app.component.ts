@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FreezerDto, FreezerSlotDto, FrozenItemDto } from '@freezer/api-interfaces';
 import { FreezerService } from './freezer.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { CreateFrozenItemDialogComponent } from './create-frozen-item-dialog/cre
 import { EditNameDialogComponent } from './edit-name-dialog/edit-name-dialog.component';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'freezer-root',
@@ -139,4 +140,23 @@ export class AppComponent {
       }
     });
   }
+  sortData(index: number, sort: Sort) {
+    const data = this.activeFreezer.slots[index].frozenItems;
+    if (!sort.active || sort.direction === '') {
+      this.dataSources[index] = new MatTableDataSource(data);
+      return;
+    }
+
+    this.dataSources[index] = new MatTableDataSource(data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'quantity': return compare(a.quantity, b.quantity, isAsc);
+        default: return 0;
+      }
+    }));
+  }
+}
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
