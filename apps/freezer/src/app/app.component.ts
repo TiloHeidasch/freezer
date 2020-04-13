@@ -120,13 +120,23 @@ export class AppComponent {
     });
   }
   deleteSlot(freezerSlotDto: FreezerSlotDto) {
-    this.activeFreezer.slots = this.activeFreezer.slots.filter(slot => slot.id !== freezerSlotDto.id);
-    this.freezerService.deleteFreezerSlot(this.activeFreezer, freezerSlotDto);
-    this.updateDataSources();
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, { data: freezerSlotDto });
+    dialogRef.afterClosed().subscribe(async confirmed => {
+      if (confirmed) {
+        this.activeFreezer.slots = this.activeFreezer.slots.filter(slot => slot.id !== freezerSlotDto.id);
+        this.freezerService.deleteFreezerSlot(this.activeFreezer, freezerSlotDto);
+        this.updateDataSources();
+      }
+    });
   }
   deleteFreezer() {
-    this.freezerService.deleteFreezer(this.activeFreezer);
-    this.freezers = this.freezers.filter(freezer => freezer.id !== this.activeFreezer.id);
-    this.setActiveFreezer(this.freezers[0]);
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, { data: this.activeFreezer });
+    dialogRef.afterClosed().subscribe(async confirmed => {
+      if (confirmed) {
+        this.freezerService.deleteFreezer(this.activeFreezer);
+        this.freezers = this.freezers.filter(freezer => freezer.id !== this.activeFreezer.id);
+        this.setActiveFreezer(this.freezers[0]);
+      }
+    });
   }
 }
