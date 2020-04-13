@@ -18,7 +18,7 @@ export class AppComponent {
   freezers: FreezerDto[];
   activeFreezer: FreezerDto = undefined;
   dataSources = [];
-  displayedColumns: string[] = ['name', 'quantity', 'delete'];
+  displayedColumns: string[] = ['name', 'quantity', 'edit'];
   constructor(private freezerService: FreezerService, private dialog: MatDialog) { }
 
   async ngOnInit() {

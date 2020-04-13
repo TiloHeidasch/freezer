@@ -55,10 +55,7 @@
           <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.name}}
-              <button mat-icon-button (click)="editFrozenItemName(freezerSlot,element)">
-                <mat-icon>edit</mat-icon>
-              </button> </td>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <!-- Quantity Column -->
@@ -76,13 +73,24 @@
             </td>
           </ng-container>
 
-          <!-- Delete Column -->
-          <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Delete </th>
+          <!-- Edit Column -->
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
             <td mat-cell *matCellDef="let element">
-              <button mat-icon-button class="delete" (click)="deleteItem(freezerSlot,element)">
-                <mat-icon>delete_forever </mat-icon>
-              </button> </td>
+              <button mat-icon-button [matMenuTriggerFor]="itemmenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #itemmenu="matMenu">
+                <button mat-menu-item (click)="editFrozenItemName(freezerSlot,element)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Rename Frozen Item</span>
+                </button>
+                <button mat-menu-item class="delete" (click)="deleteItem(freezerSlot,element)">
+                  <mat-icon class="delete">delete_forever</mat-icon>
+                  <span>Delete Frozen Item</span>
+                </button>
+              </mat-menu>
+            </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
