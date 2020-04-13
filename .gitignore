@@ -40,3 +40,6 @@ Thumbs.db
 
 # local data
 /data
+
+# temp nx files
+*.nx-tmp
