@@ -30,7 +30,7 @@
     <mat-card class="freezer-slot-card" *ngFor="let freezerSlot of activeFreezer.slots ;let i=index">
       <mat-card-header>
         <mat-card-title class="freezer-slot-title">{{freezerSlot.name}}
-          <button class="menu-button" *ngIf="activeFreezer!==undefined" mat-icon-button [matMenuTriggerFor]="slotmenu">
+          <button class="menu-button" mat-icon-button [matMenuTriggerFor]="slotmenu">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #slotmenu="matMenu">
