@@ -28,14 +28,20 @@ export class FrozenItem {
     id: string;
     name: string;
     quantity: number;
+    unit: string;
     created: Date;
-    constructor(name: string, quantity?: number) {
+    constructor(name: string, quantity?: number, unit?: string, ) {
         this.id = uuidv4();
         this.name = name;
         if (quantity !== undefined) {
             this.quantity = quantity;
         } else {
             this.quantity = 0;
+        }
+        if (unit !== undefined) {
+            this.unit = unit;
+        } else {
+            this.unit = '';
         }
         this.created = new Date();
     }

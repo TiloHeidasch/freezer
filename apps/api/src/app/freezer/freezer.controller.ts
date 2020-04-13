@@ -138,7 +138,7 @@ export class FreezerController {
     @ApiParam({ name: 'freezerId', description: 'The id of the freezer in which to create the new item', example: uuidv4() })
     @ApiParam({ name: 'freezerSlotId', description: 'The id of the freezerSlot in which to create the new item', example: uuidv4() })
     async createNewFrozenItem(@Body() createNewFrozenItemDto: CreateNewFrozenItemDto, @Param('freezerId') freezerId: string, @Param('freezerSlotId') freezerSlotId: string): Promise<FrozenItemDto> {
-        return this.frozenItemToDto(await this.service.addNewFrozenItem(freezerId, freezerSlotId, createNewFrozenItemDto.name, createNewFrozenItemDto.quantity));
+        return this.frozenItemToDto(await this.service.addNewFrozenItem(freezerId, freezerSlotId, createNewFrozenItemDto.name, createNewFrozenItemDto.quantity, createNewFrozenItemDto.unit));
     }
     @Put(':freezerId/freezerslot/:freezerSlotId/frozenItem')
     @ApiOperation({ summary: 'Update or create Frozen Item', description: 'Update or Create a Frozen Item' })
@@ -177,8 +177,7 @@ export class FreezerController {
         return { id: freezerSlot.id, name: freezerSlot.name, frozenItems, created: freezerSlot.created };
     }
     private frozenItemToDto(frozenItem: FrozenItem): FrozenItemDto {
-        return { id: frozenItem.id, name: frozenItem.name, quantity: frozenItem.quantity, created: frozenItem.created };
-
+        return { id: frozenItem.id, name: frozenItem.name, quantity: frozenItem.quantity, unit: frozenItem.unit, created: frozenItem.created };
     }
 
     private dtoToFreezer(freezerDto: FreezerDto): Freezer {
@@ -196,7 +195,6 @@ export class FreezerController {
         return { id: freezerSlotDto.id, name: freezerSlotDto.name, frozenItems, created: freezerSlotDto.created };
     }
     private dtoToFrozenItem(frozenItemDto: FrozenItemDto): FrozenItem {
-        return { id: frozenItemDto.id, name: frozenItemDto.name, quantity: frozenItemDto.quantity, created: frozenItemDto.created };
-
+        return { id: frozenItemDto.id, name: frozenItemDto.name, quantity: frozenItemDto.quantity, unit: frozenItemDto.unit, created: frozenItemDto.created };
     }
 }

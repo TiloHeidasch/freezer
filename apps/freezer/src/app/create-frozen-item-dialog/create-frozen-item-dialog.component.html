@@ -17,6 +17,10 @@
             Quantity must be <strong>positive</strong>
         </mat-error>
     </mat-form-field>
+    <mat-form-field class="dialog-form-field">
+        <mat-label>Unit</mat-label>
+        <input matInput [(ngModel)]="data.unit">
+    </mat-form-field>
     <p>In which slot is the frozen item stored?</p>
     <mat-form-field class="dialog-form-field">
         <mat-label>Slot</mat-label>

@@ -9,7 +9,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
   styleUrls: ['./create-frozen-item-dialog.component.scss']
 })
 export class CreateFrozenItemDialogComponent {
-  data: { name; slot; quantity; } = { name: '', slot: this.slots[0], quantity: 1 };
+  data: { name; slot; quantity; unit; } = { name: '', slot: this.slots[0], quantity: 1, unit: '' };
 
   nameFormControl = new FormControl('', [
     Validators.required,

@@ -125,8 +125,8 @@ export class FreezerService {
         }
         return item;
     }
-    async addNewFrozenItem(freezerId: string, freezerSlotId: string, name: string, quantity?: number): Promise<FrozenItem> {
-        const frozenItem: FrozenItem = new FrozenItem(name, quantity);
+    async addNewFrozenItem(freezerId: string, freezerSlotId: string, name: string, quantity?: number, unit?: string): Promise<FrozenItem> {
+        const frozenItem: FrozenItem = new FrozenItem(name, quantity, unit);
         const freezerSlot: FreezerSlot = await this.getFreezerSlotById(freezerId, freezerSlotId);
         freezerSlot.frozenItems.push(frozenItem);
         await this.updateFreezerSlot(freezerId, freezerSlot);

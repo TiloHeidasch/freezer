@@ -8,8 +8,10 @@ export class FrozenItemDto {
   readonly created: Date;
   @ApiProperty({ description: 'The name of the frozen item', example: 'Curry' })
   name: string;
-  @ApiProperty({ description: 'The quantity of how many are in store', example: '3' })
+  @ApiProperty({ description: 'The quantity of how many are in store', example: 3 })
   quantity: number;
+  @ApiProperty({ description: 'The unit of the quantity', example: 'kg' })
+  unit: string;
 }
 export class FreezerSlotDto {
   @ApiProperty({ description: 'The unique id', example: uuidv4() })
@@ -42,6 +44,8 @@ export class CreateNewFreezerSlotDto {
 export class CreateNewFrozenItemDto {
   @ApiProperty({ description: 'The name of the new frozen item', example: 'My new frozen item' })
   name: string;
-  @ApiProperty({ description: 'The amount of the newly created frozen items', example: '12', required: false })
+  @ApiProperty({ description: 'The amount of the newly created frozen items', example: 12, required: false })
   quantity?: number;
+  @ApiProperty({ description: 'The unit of the quantity', example: 'kg', required: false })
+  unit?: string;
 }

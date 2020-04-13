@@ -21,8 +21,8 @@ export class FreezerService {
     const freezerSlot: FreezerSlotDto = await this.http.post<FreezerSlotDto>('/api/freezer/' + freezer.id + '/freezerslot/', createFreezerSlotDto).toPromise();
     return freezerSlot;
   }
-  async createFrozenItem(freezer: FreezerDto, freezerSlot: FreezerSlotDto, name: string, quantity: number): Promise<FrozenItemDto> {
-    const createNewFrozenItemDto: CreateNewFrozenItemDto = { name, quantity };
+  async createFrozenItem(freezer: FreezerDto, freezerSlot: FreezerSlotDto, name: string, quantity: number, unit: string): Promise<FrozenItemDto> {
+    const createNewFrozenItemDto: CreateNewFrozenItemDto = { name, quantity, unit };
     const frozenItem: FrozenItemDto = await this.http.post<FrozenItemDto>('/api/freezer/' + freezer.id + '/freezerslot/' + freezerSlot.id + '/frozenItem/', createNewFrozenItemDto).toPromise();
     return frozenItem;
   }

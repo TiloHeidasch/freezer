@@ -66,7 +66,7 @@
                 (click)="reduceQuantity(freezerSlot,element)">
                 <mat-icon>remove_circle_outline</mat-icon>
               </button>
-              {{element.quantity}}
+              {{element.quantity}}<span *ngIf="element.unit!==undefined"> {{element.unit}}</span>
               <button mat-icon-button (click)="increaseQuantity(freezerSlot,element)">
                 <mat-icon>add_circle_outline</mat-icon>
               </button>

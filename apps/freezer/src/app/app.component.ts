@@ -60,7 +60,7 @@ export class AppComponent {
     const dialogRef = this.dialog.open(CreateFrozenItemDialogComponent, { data: this.activeFreezer.slots });
     dialogRef.afterClosed().subscribe(async result => {
       if (result !== undefined && result.name !== '' && result.slot !== undefined && result.quantity >= 0) {
-        const newFrozenItem: FrozenItemDto = await this.freezerService.createFrozenItem(this.activeFreezer, result.slot, result.name, result.quantity);
+        const newFrozenItem: FrozenItemDto = await this.freezerService.createFrozenItem(this.activeFreezer, result.slot, result.name, result.quantity, result.unit);
         result.slot.frozenItems.push(newFrozenItem);
         this.updateDataSources();
       }
